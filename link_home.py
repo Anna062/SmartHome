@@ -14,11 +14,11 @@ modbus_client = ModbusSerialClient(
 )
 
 # Configuration MQTT
-MQTT_BROKER = "192.168.101.39"  # Adresse IP du Raspberry Pi
-MQTT_PORT = 8883
-MQTT_TOPIC_COMMANDE = "maison/commande"  # Pour recevoir les commandes
-MQTT_TOPIC_REPONSE = "maison/reponse"  # Pour envoyer des réponses
-MQTT_TOPIC_STATUT = "maison/statut"  # Pour envoyer des mises à jour
+MQTT_BROKER = "192.168.101.87"  # Adresse IP du Raspberry Pi
+MQTT_PORT = 1883
+MQTT_TOPIC_COMMANDE = "maison/commande"
+MQTT_TOPIC_REPONSE = "maison/reponse"
+MQTT_TOPIC_STATUT = "maison/statut"
 
 # Création du client MQTT
 mqtt_client = mqtt.Client()
@@ -36,21 +36,6 @@ def on_connect(client, userdata, flags, rc, properties=None):
 def on_message(client, userdata, msg):
     commande = msg.payload.decode()
     print(f"📥 Commande reçue : {commande}")
-    
-    try:
-        valeur_a_envoyer = int(commande)  # Convertir en entier
-        result = modbus_client.write_register(0, valeur_a_envoyer, slave=1)  # Écrire dans le registre 0 de l'ESP32
-        
-        if not result.isError():
-            print(f"✅ Commande envoyée à l'ESP32 via Modbus: {valeur_a_envoyer}")
-            mqtt_client.publish(MQTT_TOPIC_REPONSE, f"Commande {valeur_a_envoyer} envoyée")
-        else:
-            print("❌ Erreur Modbus lors de l'envoi de la commande")
-            mqtt_client.publish(MQTT_TOPIC_REPONSE, "Erreur lors de l'envoi")
-    
-    except ValueError:
-        print("⚠️ Erreur : la commande MQTT reçue n'est pas un nombre valide")
-        mqtt_client.publish(MQTT_TOPIC_REPONSE, "Commande invalide")
 
 # Callback en cas de déconnexion MQTT
 def on_disconnect(client, userdata, rc, properties=None):
@@ -68,7 +53,7 @@ def read_and_publish():
             mqtt_client.publish(MQTT_TOPIC_STATUT, f"Température: {temperature}°C")
         else:
             print("❌ Erreur Modbus lors de la lecture")
-        time.sleep(5)  # Lecture toutes les 5 secondes
+        time.sleep(5)
 
 # Initialisation MQTT
 mqtt_client.on_connect = on_connect
@@ -89,7 +74,7 @@ if modbus_client.connect():
 
     try:
         while True:
-            time.sleep(1)  # Garde le script actif
+            time.sleep(1)
     except KeyboardInterrupt:
         print("🛑 Arrêt du script...")
         mqtt_client.loop_stop()
