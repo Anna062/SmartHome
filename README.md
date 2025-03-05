@@ -111,15 +111,15 @@ Ce projet vise à simuler une maison intelligente en utilisant le kit Keyestudio
 
 ## ⚠️ 6 - Problèmes rencontrés et solutions apportées
 
-| Problème | Solution |
-|---|---|
-| Bibliothèques Arduino incompatibles (ESP32Servo, Wire) | Remplacement par des versions compatibles ESP32 |
-| Conflits pymodbus 2.x / 3.x | Migration vers pymodbus 3.x et adaptation du code |
-| Permissions UART Raspberry | Ajout de l’utilisateur `admin` au groupe `dialout` |
-| Modbus RX bruité / illisible | Vérification des câbles et alimentation commune |
+| Problème                                                                   | Solution |
+|------------------------------------------------|-----------------------------------------------------------------|
+| Bibliothèques Arduino incompatibles (ESP32Servo, Wire)         | Remplacement par des versions compatibles ESP32 |
+| Conflits pymodbus 2.x / 3.x                    |               Migration vers pymodbus 3.x et adaptation du code |
+| Permissions UART Raspberry                     |              Ajout de l’utilisateur `admin` au groupe `dialout` |
+| Modbus RX bruité / illisible                   |                 Vérification des câbles et alimentation commune |
 | Erreurs de lecture Modbus (Incomplete message) | Ajustement des configurations UART et stabilisation des timings |
-| Abandon de MQTTX (trop limité) | Passage à Mosquitto pour le broker avec TLS |
-| Confusion entre GPIO et UART sur Raspberry Pi | Vérification avec `pinout` officiel et ajustement des pins |
+| Abandon de MQTTX (trop limité)                 |                     Passage à Mosquitto pour le broker avec TLS |
+| Confusion entre GPIO et UART sur Raspberry Pi  |      Vérification avec `pinout` officiel et ajustement des pins |
 
 ---
 
@@ -131,27 +131,26 @@ Ce projet vise à simuler une maison intelligente en utilisant le kit Keyestudio
 ### 📍 Activation UART
 sudo raspi-config
 
-### 📍 Création de l’environnement virtuel
-bash
-Copier
-Modifier
+### 📍 Création de l’environnement virtuel```
 python3 -m venv venv
 source venv/bin/activate
 
 ### 📍 Installation des dépendances
-bash
-Copier
-Modifier
+```
 pip install pymodbus paho-mqtt
+```
 
 ### 📍 Lancer le script de monitoring
-bash
+```
 Copier
 Modifier
 python3 read_home.py
+```
+
+---
 
 ### 📂 8 - Structure du projet
-bash
+```
 Copier
 Modifier
 Projet-Home-StartKit/
@@ -178,24 +177,35 @@ Projet-Home-StartKit/
     ├── esp32_logs.txt              # Logs côté ESP32
     ├── raspberry_logs.txt          # Logs côté Raspberry Pi
     └── mqtt_logs.txt                # Logs côté MQTT
+```
+
+---
 
 ### 🛠️  9 - Checklist de vérification
-
+```
 - ESP32 téléversement réussi
 - Logs ESP32 lisibles (commande reçue, température simulée)
 - Raspberry Pi reçoit bien les valeurs Modbus
 - Vitesse ventilateur change bien selon la température
 - MQTT publie correctement sur les topics
 - Dashboard (en option) reçoit bien les données
+```
+---
 
 ### 🚀  10 - Évolutions possibles
+```
 - Intégration Node-RED pour visualisation temps réel.
 - Ajout d’une base de données InfluxDB pour historique.
 - Enrichissement avec capteurs supplémentaires (humidité, luminosité, etc.).
 - Sécurisation supplémentaire avec authentification côté Modbus RTU.
 - Notification e-mail en cas d’anomalie (température trop élevée, etc.).
+```
+
+---
 
 ### 👨‍💻 Auteurs
-Samy Boudaoud - Développement complet, configuration hardware et software
-Youssouf Abayazid - Assistance montage et tests
-Fatim Dicko - Câblage initial
+```
+Samy Boudaoud - Développement UART/modBus + Dashboard(en cours) + configuration hardware (RaspBerri Serial port config)
+Youssouf Abayazid - Assistance montage et tests + certificats/sécurité
+Fatim Dicko - Câblage initial + Développement modBus
+```
